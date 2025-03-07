@@ -1,21 +1,25 @@
 {
-  "name": "kovalskaya-high-load-test",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "dev": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Ilia Khlyzov",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "express": "^4.21.2"
-  },
-  "engines": {
-    "node": ">=22.0.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.9"
-  }
+	"name": "kovalskaya-high-load-test",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"dev": "nodemon src/index.js",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"setup-hooks": "npx lefthook install"
+	},
+	"author": "Ilia Khlyzov",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"express": "^4.21.2",
+		"sequelize": "^6.37.6"
+	},
+	"engines": {
+		"node": ">=22.0.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"lefthook": "^1.11.3",
+		"nodemon": "^3.1.9"
+	}
 }
