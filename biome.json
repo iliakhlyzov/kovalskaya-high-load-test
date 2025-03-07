@@ -24,7 +24,10 @@
 	},
 	"javascript": {
 		"formatter": {
-			"quoteStyle": "double"
+			"indentStyle": "space",
+			"indentWidth": 2,
+			"semicolons": "asNeeded",
+			"quoteStyle": "single"
 		}
 	}
 }
