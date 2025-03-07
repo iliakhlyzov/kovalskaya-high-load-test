@@ -1,11 +1,13 @@
 {
 	"name": "kovalskaya-high-load-test",
 	"version": "1.0.0",
-	"main": "index.js",
+	"main": "src/index.js",
+	"type": "module",
 	"scripts": {
 		"dev": "nodemon src/index.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"setup-hooks": "npx lefthook install"
+		"setup-hooks": "npx lefthook install",
+		"biome": "npx @biomejs/biome check --write ./src"
 	},
 	"author": "Ilia Khlyzov",
 	"license": "ISC",

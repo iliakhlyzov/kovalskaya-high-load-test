@@ -1,8 +1,17 @@
-const express = require('express')
-const PORT = process.env.PORT || 3000
-const { Sequelize } = require('sequelize')
+import 'dotenv/config'
+import * as express from 'express'
+import sequelize from './database/index.js'
 
-const main = () => {
+const PORT = process.env.PORT || 3000
+
+const main = async () => {
+  try {
+    await sequelize.authenticate()
+    console.log('Database connection has been established successfully.')
+  } catch (error) {
+    console.error('Unable to connect to the database:', error)
+  }
+
   const app = express()
 
   app.get('/', (req, res) => {
