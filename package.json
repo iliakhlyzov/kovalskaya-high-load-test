@@ -5,6 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "nodemon src/index.js",
+		"build": "yarn",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"setup-hooks": "npx lefthook install",
 		"biome": "npx @biomejs/biome check --write ./src"
@@ -13,7 +14,9 @@
 	"license": "ISC",
 	"description": "",
 	"dependencies": {
+		"dotenv": "^16.4.7",
 		"express": "^4.21.2",
+		"pg": "^8.13.3",
 		"sequelize": "^6.37.6"
 	},
 	"engines": {

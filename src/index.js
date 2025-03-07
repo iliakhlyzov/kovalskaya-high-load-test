@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import * as express from 'express'
+import express from 'express'
 import sequelize from './database/index.js'
 
 const PORT = process.env.PORT || 3000
@@ -14,13 +14,21 @@ const main = async () => {
 
   const app = express()
 
-  app.get('/', (req, res) => {
-    res.send('Hello World!')
-  })
+  app.use('/health', (req, res) => res.status(200).send('HEALTHY'))
 
   app.listen(PORT, () => {
     console.log(`Example app listening on port ${PORT}`)
   })
 }
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err)
+  process.exit(1)
+})
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason)
+  process.exit(1)
+})
 
 main()
