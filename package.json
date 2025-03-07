@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ilia Khlyzov",
@@ -10,5 +11,11 @@
   "description": "",
   "dependencies": {
     "express": "^4.21.2"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }
