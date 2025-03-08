@@ -8,7 +8,12 @@
 		"build": "yarn",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"setup-hooks": "npx lefthook install",
-		"biome": "npx @biomejs/biome check --write ./src"
+		"start:with-migrations": "npm run migrate:up && npm run dev",
+		"biome": "npx @biomejs/biome check --write ./src",
+		"migrate:up": "node scripts/migrate.js up",
+		"migrate:down": "node scripts/migrate.js down",
+		"migrate:pending": "node scripts/migrate.js pending",
+		"migrate:executed": "node scripts/migrate.js executed"
 	},
 	"author": "Ilia Khlyzov",
 	"license": "ISC",
@@ -17,7 +22,8 @@
 		"dotenv": "^16.4.7",
 		"express": "^4.21.2",
 		"pg": "^8.13.3",
-		"sequelize": "^6.37.6"
+		"sequelize": "^6.37.6",
+		"umzug": "^3.8.2"
 	},
 	"engines": {
 		"node": ">=22.0.0"

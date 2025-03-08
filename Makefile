@@ -7,6 +7,9 @@ start:
 
 # Stop and remove containers, networks, volumes, and images created by up.
 stop:
+	docker-compose stop
+
+down:
 	docker-compose down
 
 # Build container images.
