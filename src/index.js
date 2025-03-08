@@ -1,5 +1,8 @@
 import 'dotenv/config'
+import cors from 'cors'
 import express from 'express'
+import morgan from 'morgan'
+import userBalanceController from './controllers/userBalanceController.js'
 import sequelize from './database/index.js'
 
 const PORT = process.env.PORT || 3000
@@ -14,7 +17,13 @@ const main = async () => {
 
   const app = express()
 
+  app.use(cors())
+  app.use(morgan('dev'))
+  app.use(express.json())
+  app.use(express.urlencoded({ extended: true }))
+
   app.use('/health', (req, res) => res.status(200).send('HEALTHY'))
+  app.use('/user-balance', userBalanceController)
 
   app.listen(PORT, () => {
     console.log(`Example app listening on port ${PORT}`)
