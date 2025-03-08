@@ -13,7 +13,7 @@ export async function up({ context: queryInterface }) {
     balance: {
       type: Sequelize.DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 1000,
+      defaultValue: 0,
     },
     createdAt: {
       allowNull: false,
@@ -41,7 +41,7 @@ export async function up({ context: queryInterface }) {
   await queryInterface.bulkInsert('userBalance', [
     {
       id: uuid,
-      balance: 1000,
+      balance: 10000,
       createdAt: new Date(),
       updatedAt: new Date(),
     },
