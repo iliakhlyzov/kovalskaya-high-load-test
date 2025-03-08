@@ -1,3 +1,4 @@
+import { QueryTypes } from 'sequelize'
 import UserBalance from '../models/UserBalance.js'
 
 /**
@@ -19,20 +20,25 @@ class UserBalanceService {
    * @returns {Promise<UserBalance|null>}
    */
   async updateBalance(id, delta) {
-    const userBalance = await UserBalance.findByPk(id)
+    const [results] = await UserBalance.sequelize.query(
+      `
+      UPDATE "userBalance"
+      SET balance = balance + :delta
+      WHERE id = :id
+        AND balance + :delta >= 0
+      RETURNING *;
+      `,
+      {
+        replacements: { id, delta },
+        type: QueryTypes.UPDATE,
+      },
+    )
 
-    if (!userBalance) {
-      throw new Error('User balance record not found')
+    if (!results.length) {
+      throw new Error('insufficient funds in the account')
     }
 
-    const newBalance = userBalance.balance + delta
-
-    if (newBalance < 0) {
-      throw new Error('Resulting balance cannot be negative')
-    }
-
-    userBalance.balance = newBalance
-    return await userBalance.save()
+    return results[0]
   }
 }
 

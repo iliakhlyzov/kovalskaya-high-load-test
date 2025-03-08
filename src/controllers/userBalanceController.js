@@ -42,12 +42,12 @@ class UserBalanceController {
       const { id } = req.params
       const { delta } = req.body
 
-      // TODO: Обработать delta = 0
-      const updatedRecord = await userBalanceService.updateBalance(id, delta)
-      res.json(updatedRecord)
+      const result = await userBalanceService.updateBalance(id, delta)
+
+      res.json(result)
     } catch (error) {
       console.error(error)
-      res.status(500).json({ error: error.message })
+      res.status(400).json({ error: error.message })
     }
   }
 }
