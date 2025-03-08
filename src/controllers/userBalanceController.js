@@ -1,7 +1,10 @@
 import { Router } from 'express'
-import { body } from 'express-validator'
-import { validateRequest } from '../middlewares/validateRequest.js'
+import { validateSchema } from '../middlewares/validateSchema.js'
 import userBalanceService from '../services/userBalanceService.js'
+import {
+  idSchema,
+  updateBalanceSchema,
+} from '../validation/schemas/userBalanceSchemas.js'
 
 class UserBalanceController {
   constructor() {
@@ -14,8 +17,8 @@ class UserBalanceController {
     this.router.get('/', this.getAll.bind(this))
     this.router.put(
       '/:id',
-      body('delta').isNumeric().withMessage('Delta must be a numeric value'),
-      validateRequest,
+      validateSchema(idSchema, 'params'),
+      validateSchema(updateBalanceSchema, 'body'),
       this.update.bind(this),
     )
   }
@@ -38,17 +41,12 @@ class UserBalanceController {
   }
 
   async update(req, res) {
-    try {
-      const { id } = req.params
-      const { delta } = req.body
+    const { id } = req.params
+    const { delta } = req.body
 
-      const result = await userBalanceService.updateBalance(id, delta)
+    const result = await userBalanceService.updateBalance(id, delta)
 
-      res.json(result)
-    } catch (error) {
-      console.error(error)
-      res.status(400).json({ error: error.message })
-    }
+    res.json(result)
   }
 }
 

@@ -9,7 +9,7 @@ const requestData = {
 }
 
 const runLoadTest = async () => {
-  const statusCount = { 200: 0, 500: 0, other: 0 }
+  const statusCount = { 200: 0, 400: 0, other: 0 }
 
   const requests = Array.from({ length: 10000 }, () => fetch(url, requestData))
   const responses = await Promise.allSettled(requests)
@@ -19,8 +19,8 @@ const runLoadTest = async () => {
       const statusCode = result.value.status
       if (statusCode === 200) {
         statusCount['200']++
-      } else if (statusCode === 500) {
-        statusCount['500']++
+      } else if (statusCode === 400) {
+        statusCount['400']++
       } else {
         statusCount.other++
       }
@@ -29,10 +29,10 @@ const runLoadTest = async () => {
     }
   }
 
-  console.log('Результаты запросов:')
+  console.log('Results:')
   console.log(`✅ 200: ${statusCount['200']}`)
-  console.log(`⚠️ 500: ${statusCount['500']}`)
-  console.log(`❌ Остальные: ${statusCount.other}`)
+  console.log(`⚠️ 400: ${statusCount['400']}`)
+  console.log(`❌ Other: ${statusCount.other}`)
 }
 
 runLoadTest()

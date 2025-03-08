@@ -4,6 +4,7 @@ import express from 'express'
 import morgan from 'morgan'
 import userBalanceController from './controllers/userBalanceController.js'
 import sequelize from './database/index.js'
+import { errorHandler } from './middlewares/errorHandler.js'
 
 const PORT = process.env.PORT || 3000
 
@@ -21,6 +22,8 @@ const main = async () => {
   app.use(morgan('dev'))
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
+
+  app.use(errorHandler)
 
   app.use('/health', (req, res) => res.status(200).send('HEALTHY'))
   app.use('/user-balance', userBalanceController)

@@ -1,4 +1,5 @@
 import { QueryTypes } from 'sequelize'
+import { ApiError } from '../errors/ApiError.js'
 import UserBalance from '../models/UserBalance.js'
 
 /**
@@ -35,7 +36,7 @@ class UserBalanceService {
     )
 
     if (!results.length) {
-      throw new Error('insufficient funds in the account')
+      throw ApiError.badRequest('insufficient funds in the account')
     }
 
     return results[0]
