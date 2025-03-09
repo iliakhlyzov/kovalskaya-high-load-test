@@ -1,8 +1,8 @@
 import { DataTypes } from 'sequelize'
 import sequelize from '../database/index.js'
 
-const UserBalance = sequelize.define(
-  'UserBalance',
+const CronTask = sequelize.define(
+  'CronTask',
   {
     id: {
       type: DataTypes.UUID,
@@ -10,21 +10,93 @@ const UserBalance = sequelize.define(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    balance: {
-      type: DataTypes.INTEGER,
+    enabled: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: 1000,
-      validate: {
-        min: 0,
-      },
+      defaultValue: true,
+    },
+    lastRunAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    currentRunStartedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    lockedUntil: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    lockedBy: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
-    tableName: 'userBalance',
-    timestamps: true,
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
+    tableName: 'cron_tasks',
   },
 )
 
-export default UserBalance
+const CronTaskLog = sequelize.define(
+  'CronTaskLog',
+  {
+    id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    taskId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: 'CronTask',
+        key: 'id',
+      },
+    },
+    startedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    finishedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    status: {
+      type: DataTypes.ENUM('success', 'error'),
+      allowNull: false,
+    },
+    instanceId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+  },
+  {
+    tableName: 'cron_task_logs',
+  },
+)
+
+CronTask.hasMany(CronTaskLog, { foreignKey: 'taskId', as: 'logs' })
+CronTaskLog.belongsTo(CronTask, { foreignKey: 'taskId', as: 'task' })
+
+export { CronTask, CronTaskLog }

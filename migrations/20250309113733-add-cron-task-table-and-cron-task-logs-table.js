@@ -1,7 +1,7 @@
 import * as Sequelize from 'sequelize'
 
 export async function up({ context: queryInterface }) {
-  await queryInterface.createTable('cronTasks', {
+  await queryInterface.createTable('cron_tasks', {
     id: {
       type: Sequelize.DataTypes.UUID,
       allowNull: false,
@@ -50,7 +50,7 @@ export async function up({ context: queryInterface }) {
     },
   })
 
-  await queryInterface.createTable('cronTaskLogs', {
+  await queryInterface.createTable('cron_task_logs', {
     id: {
       type: Sequelize.DataTypes.UUID,
       allowNull: false,

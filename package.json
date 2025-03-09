@@ -10,6 +10,7 @@
 		"setup-hooks": "npx lefthook install",
 		"start:with-migrations": "npm run migrate:up && npm run dev",
 		"biome": "npx @biomejs/biome check --write .",
+		"generate:migration": "npx sequelize-cli migration:generate --name",
 		"migrate:up": "node scripts/migrate.js up",
 		"migrate:down": "node scripts/migrate.js down",
 		"migrate:pending": "node scripts/migrate.js pending",
@@ -40,6 +41,7 @@
 		"jest": "^29.7.0",
 		"lefthook": "^1.11.3",
 		"node-fetch": "^3.3.2",
-		"nodemon": "^3.1.9"
+		"nodemon": "^3.1.9",
+		"sequelize-cli": "^6.6.2"
 	}
 }
