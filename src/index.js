@@ -3,6 +3,7 @@ import 'express-async-errors'
 import cors from 'cors'
 import express from 'express'
 import morgan from 'morgan'
+import cronTaskController from './controllers/cronTaskController.js'
 import userBalanceController from './controllers/userBalanceController.js'
 import sequelize from './database/index.js'
 import { errorHandler } from './middlewares/errorHandler.js'
@@ -28,6 +29,7 @@ const main = async () => {
 
   app.use('/health', (req, res) => res.status(200).send('HEALTHY'))
   app.use('/user-balance', userBalanceController)
+  app.use('/cron', cronTaskController)
 
   app.listen(PORT, () => {
     console.log(`Example app listening on port ${PORT}`)
