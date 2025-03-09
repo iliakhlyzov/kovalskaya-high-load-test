@@ -1,103 +1,108 @@
-import * as Sequelize from 'sequelize'
+import { DataTypes } from 'sequelize'
 
 export async function up({ context: queryInterface }) {
-  await queryInterface.createTable('cron_tasks', {
-    id: {
-      type: Sequelize.DataTypes.UUID,
-      allowNull: false,
-      primaryKey: true,
-      defaultValue: Sequelize.DataTypes.UUIDV4,
-    },
-    name: {
-      type: Sequelize.DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    intervalSec: {
-      type: Sequelize.DataTypes.INTEGER,
-      allowNull: false,
-    },
-    enabled: {
-      type: Sequelize.DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: true,
-    },
-    lastRunAt: {
-      type: Sequelize.DataTypes.DATE,
-      allowNull: true,
-    },
-    currentRunStartedAt: {
-      type: Sequelize.DataTypes.DATE,
-      allowNull: true,
-    },
-    lockedBy: {
-      type: Sequelize.DataTypes.STRING,
-      allowNull: true,
-    },
-    lockedUntil: {
-      type: Sequelize.DataTypes.DATE,
-      allowNull: true,
-    },
-    createdAt: {
-      allowNull: false,
-      type: Sequelize.DataTypes.DATE,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-    updatedAt: {
-      allowNull: false,
-      type: Sequelize.DataTypes.DATE,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-  })
-
-  await queryInterface.createTable('cron_task_logs', {
-    id: {
-      type: Sequelize.DataTypes.UUID,
-      allowNull: false,
-      primaryKey: true,
-      defaultValue: Sequelize.DataTypes.UUIDV4,
-    },
-    taskId: {
-      type: Sequelize.DataTypes.UUID,
-      allowNull: false,
-      references: {
-        model: 'cronTasks',
-        key: 'id',
+  await queryInterface.sequelize.transaction(async (transaction) => {
+    await queryInterface.createTable(
+      'cron_tasks',
+      {
+        id: {
+          type: DataTypes.UUID,
+          primaryKey: true,
+          allowNull: false,
+          defaultValue: DataTypes.UUIDV4,
+        },
+        enabled: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: true,
+        },
+        last_run_at: {
+          type: DataTypes.DATE,
+          allowNull: true,
+        },
+        current_run_started_at: {
+          type: DataTypes.DATE,
+          allowNull: true,
+        },
+        locked_until: {
+          type: DataTypes.DATE,
+          allowNull: true,
+        },
+        locked_by: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
+        created_at: {
+          type: DataTypes.DATE,
+          allowNull: false,
+          defaultValue: DataTypes.NOW,
+        },
+        updated_at: {
+          type: DataTypes.DATE,
+          allowNull: false,
+          defaultValue: DataTypes.NOW,
+        },
       },
-      onDelete: 'CASCADE',
-    },
-    startedAt: {
-      type: Sequelize.DataTypes.DATE,
-      allowNull: false,
-    },
-    finishedAt: {
-      type: Sequelize.DataTypes.DATE,
-      allowNull: true,
-    },
-    status: {
-      type: Sequelize.DataTypes.ENUM('success', 'error'),
-      allowNull: false,
-    },
-    instanceId: {
-      type: Sequelize.DataTypes.STRING,
-      allowNull: false,
-    },
-    createdAt: {
-      allowNull: false,
-      type: Sequelize.DataTypes.DATE,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-    updatedAt: {
-      allowNull: false,
-      type: Sequelize.DataTypes.DATE,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-  })
+      { transaction },
+    )
 
-  // await queryInterface.addIndex('cronTasks', ['lockedUntil', 'enabled'])
+    await queryInterface.createTable(
+      'cron_task_logs',
+      {
+        id: {
+          type: DataTypes.UUID,
+          primaryKey: true,
+          allowNull: false,
+          defaultValue: DataTypes.UUIDV4,
+        },
+        task_id: {
+          type: DataTypes.UUID,
+          allowNull: false,
+          references: {
+            model: 'cron_tasks',
+            key: 'id',
+          },
+          onDelete: 'CASCADE',
+        },
+        started_at: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
+        finished_at: {
+          type: DataTypes.DATE,
+          allowNull: true,
+        },
+        status: {
+          type: DataTypes.ENUM('success', 'error'),
+          allowNull: false,
+        },
+        instance_id: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        created_at: {
+          type: DataTypes.DATE,
+          allowNull: false,
+          defaultValue: DataTypes.NOW,
+        },
+        updated_at: {
+          type: DataTypes.DATE,
+          allowNull: false,
+          defaultValue: DataTypes.NOW,
+        },
+      },
+      { transaction },
+    )
+
+    await queryInterface.addIndex('cron_tasks', ['locked_until', 'enabled'], {
+      transaction,
+    })
+  })
 }
 
 export async function down({ context: queryInterface }) {
-  await queryInterface.dropTable('cronTaskLogs')
-  await queryInterface.dropTable('cronTasks')
+  await queryInterface.sequelize.transaction(async (transaction) => {
+    await queryInterface.dropTable('cron_task_logs', { transaction })
+    await queryInterface.dropTable('cron_tasks', { transaction })
+  })
 }
