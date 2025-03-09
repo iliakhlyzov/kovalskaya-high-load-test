@@ -30,14 +30,9 @@ class UserBalanceController {
    * @returns {Promise<*>}
    */
   async getAll(req, res) {
-    try {
-      const result = await userBalanceService.getAll()
+    const result = await userBalanceService.getAll()
 
-      res.json(result)
-    } catch (error) {
-      console.error(error)
-      return res.status(500).json({ error: 'Internal server error' })
-    }
+    res.json(result)
   }
 
   async update(req, res) {
