@@ -1,17 +1,28 @@
 version: '3.8'
 
 services:
+  migration:
+    build: .
+    command: sh -c "npm run migrate:up"
+    env_file:
+      - .env
+    depends_on:
+      - db
+
   app:
     build: .
     ports:
       - "3000:3000"
     volumes:
         - .:/usr/src/app
-    command: sh -c "npm run start:with-migrations"
+    command: sh -c "npm run dev"
     env_file:
       - .env
     depends_on:
-      - db
+      migration:
+        condition: service_completed_successfully
+      db:
+        condition: service_started
 
   db:
     image: postgres:13-alpine

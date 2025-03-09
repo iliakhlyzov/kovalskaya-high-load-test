@@ -8,7 +8,6 @@
 		"build": "yarn",
 		"test": "NODE_OPTIONS=\"--experimental-vm-modules\" npx jest",
 		"setup-hooks": "npx lefthook install",
-		"start:with-migrations": "npm run migrate:up && npm run dev",
 		"biome": "npx @biomejs/biome check --write .",
 		"generate:migration": "npx sequelize-cli migration:generate --name",
 		"migrate:up": "node scripts/migrate.js up",
