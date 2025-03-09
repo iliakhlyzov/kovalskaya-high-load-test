@@ -23,7 +23,7 @@ class UserBalanceService {
   async updateBalance(id, delta) {
     const [results] = await UserBalance.sequelize.query(
       `
-      UPDATE "userBalance"
+      UPDATE "user_balance"
       SET balance = balance + :delta
       WHERE id = :id
         AND balance + :delta >= 0
