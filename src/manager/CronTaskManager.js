@@ -15,14 +15,14 @@ class CronTaskManager {
 
     try {
       await tasks[task.name]()
-      await this.logCompletion(task.id, log.id, 'success')
+      await this.logCompletion(task.id, 'success')
     } catch (error) {
       console.error(`❌ Task ${task.name} failed:`, error)
-      await this.logCompletion(task.id, log.id, 'error')
+      await this.logCompletion(task.id, 'error')
     }
   }
 
-  async logCompletion(taskId, logId, status) {
+  async logCompletion(taskId, status) {
     await sequelize.transaction(async (transaction) => {
       await CronTask.update(
         {
@@ -34,43 +34,30 @@ class CronTaskManager {
         { where: { id: taskId }, transaction },
       )
 
-      await CronTaskLog.update(
-        { finishedAt: fn('NOW'), status },
-        { where: { id: logId }, transaction },
+      await CronTaskLog.create(
+        { finishedAt: fn('NOW'), instanceId: this.instanceId, taskId },
+        {
+          transaction,
+        },
       )
     })
   }
 
   async getAvailableTask() {
     return await sequelize.transaction(async (transaction) => {
-      // const availableTask = await CronTask.findOne({
-      //     where: {
-      //         enabled: true,
-      //         [Op.or]: [
-      //             { lastRunAt: null },
-      //             literal(`last_run_at + INTERVAL '` + sequelize.literal(`interval_sec`) + `' SECOND <= NOW()`)
-      //         ],
-      //         currentRunStartedAt: null,
-      //         name: { [Op.in]: Object.keys(tasks) },
-      //         status: { [Op.ne]: 'pending' }
-      //     },
-      //     order: [['lastRunAt', 'ASC']],
-      //     transaction,
-      //     lock: true,
-      // })
-
       const availableTask = await CronTask.findOne({
         where: {
           enabled: true,
           [Op.or]: [
             { lastRunAt: null },
-            literal(
-              `last_run_at + INTERVAL '1 SECOND' * interval_sec <= NOW()`,
+            sequelize.literal(
+              `last_run_at <= NOW() - INTERVAL '1 second' * interval_sec`,
             ),
           ],
-          currentRunStartedAt: null,
           name: { [Op.in]: Object.keys(tasks) },
-          status: { [Op.ne]: 'pending' },
+          status: {
+            [Op.or]: [null, { [Op.not]: 'pending' }],
+          },
         },
         order: [['lastRunAt', 'ASC']],
         transaction,

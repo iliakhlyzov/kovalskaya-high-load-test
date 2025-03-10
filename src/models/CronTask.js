@@ -35,6 +35,12 @@ const CronTask = sequelize.define(
       allowNull: true,
       field: 'current_run_started_at',
     },
+    status: {
+      // TODO: set enum
+      type: DataTypes.ENUM('pending', 'success', 'error'),
+      allowNull: true,
+      defaultValue: null,
+    },
     lockedBy: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -78,19 +84,10 @@ const CronTaskLog = sequelize.define(
       },
       onDelete: 'CASCADE',
     },
-    startedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      field: 'started_at',
-    },
     finishedAt: {
       type: DataTypes.DATE,
       allowNull: true,
       field: 'finished_at',
-    },
-    status: {
-      type: DataTypes.ENUM('pending', 'success', 'error'),
-      allowNull: false,
     },
     instanceId: {
       type: DataTypes.STRING,
