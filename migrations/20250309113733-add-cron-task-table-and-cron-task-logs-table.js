@@ -36,7 +36,8 @@ export async function up({ context: queryInterface }) {
         status: {
           // TODO: set enum
           type: DataTypes.ENUM('pending', 'success', 'error'),
-          allowNull: false,
+          allowNull: true,
+          defaultValue: null,
         },
         locked_by: {
           type: DataTypes.STRING,
@@ -73,10 +74,6 @@ export async function up({ context: queryInterface }) {
             key: 'id',
           },
           onDelete: 'CASCADE',
-        },
-        started_at: {
-          type: DataTypes.DATE,
-          allowNull: false,
         },
         finished_at: {
           type: DataTypes.DATE,
