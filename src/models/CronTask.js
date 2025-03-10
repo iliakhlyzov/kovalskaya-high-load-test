@@ -10,6 +10,16 @@ const CronTask = sequelize.define(
       allowNull: false,
       defaultValue: DataTypes.UUIDV4,
     },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    intervalSec: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: 'interval_sec',
+    },
     enabled: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
@@ -25,22 +35,27 @@ const CronTask = sequelize.define(
       allowNull: true,
       field: 'current_run_started_at',
     },
-    lockedUntil: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: 'locked_until',
-    },
     lockedBy: {
       type: DataTypes.STRING,
       allowNull: true,
       field: 'locked_by',
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: 'created_at',
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: 'updated_at',
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     tableName: 'cron_tasks',
     timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
   },
 )
 
@@ -74,7 +89,7 @@ const CronTaskLog = sequelize.define(
       field: 'finished_at',
     },
     status: {
-      type: DataTypes.ENUM('success', 'error'),
+      type: DataTypes.ENUM('pending', 'success', 'error'),
       allowNull: false,
     },
     instanceId: {
@@ -82,12 +97,22 @@ const CronTaskLog = sequelize.define(
       allowNull: false,
       field: 'instance_id',
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: 'created_at',
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: 'updated_at',
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     tableName: 'cron_task_logs',
     timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
   },
 )
 

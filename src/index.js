@@ -6,6 +6,7 @@ import morgan from 'morgan'
 import cronTaskController from './controllers/cronTaskController.js'
 import userBalanceController from './controllers/userBalanceController.js'
 import sequelize from './database/index.js'
+import { cronTaskManager } from './manager/CronTaskManager.js'
 import { errorHandler } from './middlewares/errorHandler.js'
 
 const PORT = process.env.PORT || 3000
@@ -17,6 +18,8 @@ const main = async () => {
   } catch (error) {
     console.error('Unable to connect to the database:', error)
   }
+
+  cronTaskManager.start()
 
   const app = express()
 
