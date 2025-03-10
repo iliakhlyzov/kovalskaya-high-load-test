@@ -11,6 +11,15 @@ export async function up({ context: queryInterface }) {
           allowNull: false,
           defaultValue: DataTypes.UUIDV4,
         },
+        name: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          unique: true,
+        },
+        interval_sec: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+        },
         enabled: {
           type: DataTypes.BOOLEAN,
           allowNull: false,
@@ -24,9 +33,10 @@ export async function up({ context: queryInterface }) {
           type: DataTypes.DATE,
           allowNull: true,
         },
-        locked_until: {
-          type: DataTypes.DATE,
-          allowNull: true,
+        status: {
+          // TODO: set enum
+          type: DataTypes.ENUM('pending', 'success', 'error'),
+          allowNull: false,
         },
         locked_by: {
           type: DataTypes.STRING,
@@ -72,10 +82,6 @@ export async function up({ context: queryInterface }) {
           type: DataTypes.DATE,
           allowNull: true,
         },
-        status: {
-          type: DataTypes.ENUM('success', 'error'),
-          allowNull: false,
-        },
         instance_id: {
           type: DataTypes.STRING,
           allowNull: false,
@@ -93,10 +99,6 @@ export async function up({ context: queryInterface }) {
       },
       { transaction },
     )
-
-    await queryInterface.addIndex('cron_tasks', ['locked_until', 'enabled'], {
-      transaction,
-    })
   })
 }
 
