@@ -69,7 +69,6 @@ class CronTaskManager {
             },
           ],
         },
-        order: [['lastRunAt', 'ASC']],
         transaction,
         lock: true,
       })
