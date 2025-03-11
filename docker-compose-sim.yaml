@@ -14,7 +14,7 @@ services:
     deploy:
       replicas: 5
     ports:
-      - "3000-3010:3000"
+      - "3000-3004:3000"
     volumes:
       - .:/usr/src/app
     command: sh -c "npm run dev"
