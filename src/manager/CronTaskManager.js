@@ -1,4 +1,4 @@
-import { Op, fn, literal } from 'sequelize'
+import { Op, fn } from 'sequelize'
 import sequelize from '../database/index.js'
 import { CronTask, CronTaskLog } from '../models/CronTask.js'
 import tasks from './tasks.js'
@@ -17,7 +17,7 @@ class CronTaskManager {
       await tasks[task.name]()
       await this.logCompletion(task.id, 'success')
     } catch (error) {
-      console.error(`❌ Task ${task.name} failed:`, error)
+      console.error(`❌ Task ${task.name} failed on ${this.instanceId}:`, error)
       await this.logCompletion(task.id, 'error')
     }
   }
@@ -55,9 +55,19 @@ class CronTaskManager {
             ),
           ],
           name: { [Op.in]: Object.keys(tasks) },
-          status: {
-            [Op.or]: [null, { [Op.not]: 'pending' }],
-          },
+          [Op.or]: [
+            {
+              status: {
+                [Op.or]: [null, { [Op.not]: 'pending' }],
+              },
+            },
+            {
+              status: 'pending',
+              currentRunStartedAt: {
+                [Op.lt]: sequelize.literal(`NOW() - INTERVAL '30 minutes'`),
+              },
+            },
+          ],
         },
         order: [['lastRunAt', 'ASC']],
         transaction,

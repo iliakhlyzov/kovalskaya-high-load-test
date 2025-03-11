@@ -1,11 +1,21 @@
-import { CronTask } from '../models/CronTask.js'
+import { CronTask, CronTaskLog } from '../models/CronTask.js'
 
 class CronTaskService {
   /**
    * Get all cron tasks with their current execution status
    */
-  async getAllTasksWithStatus() {
-    return await CronTask.findAll()
+  async getAll() {
+    return await CronTask.findAll({
+      include: [
+        {
+          model: CronTaskLog,
+          as: 'logs',
+          required: false,
+          order: [['finishedAt', 'DESC']],
+          limit: 1,
+        },
+      ],
+    })
   }
 }
 

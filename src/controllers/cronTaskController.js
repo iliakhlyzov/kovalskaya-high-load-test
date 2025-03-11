@@ -15,7 +15,7 @@ class CronTaskController {
    * Get All cron tasks with current status
    */
   async getAll(req, res, next) {
-    const tasks = await cronTaskService.getAllTasksWithStatus()
+    const tasks = await cronTaskService.getAll()
     res.json(tasks)
   }
 }
